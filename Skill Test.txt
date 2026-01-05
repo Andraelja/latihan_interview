@@ -1,0 +1,152 @@
+tes weekend in
+
+1. MYSQL
+1. SELECT customer_id, First_name, Last_name FROM Customer WHERE First_name LIKE '%dave%';
+
+2. SELECT 
+    o.transaction_id,
+    o.transaction_date,
+    o.total_value,
+    c.first_name,
+    c.last_name
+FROM `Order` o
+JOIN Customer c ON o.customer_id = c.customer_id
+WHERE o.total_value BETWEEN 10000 AND 50000;
+
+3. SELECT 
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    COUNT(o.transaction_id) AS total_transactions,
+    SUM(o.total_value) AS total_value
+FROM Customer c
+LEFT JOIN `Order` o 
+    ON c.customer_id = o.customer_id
+    AND o.transaction_date BETWEEN '2016-07-01' AND '2016-07-31'
+GROUP BY c.customer_id, c.first_name, c.last_name;
+
+4. SELECT 
+    c.customer_id,
+    c.first_name,
+    c.last_name
+FROM Customer c
+LEFT JOIN `Order` o 
+    ON c.customer_id = o.customer_id
+    AND o.transaction_date BETWEEN '2016-07-01' AND '2016-07-31'
+WHERE o.transaction_id IS NULL;
+
+5. SELECT 
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    COUNT(o.transaction_id) AS total_transactions
+FROM Customer c
+JOIN `Order` o 
+    ON c.customer_id = o.customer_id
+WHERE o.transaction_date BETWEEN '2016-07-01' AND '2016-07-31'
+GROUP BY c.customer_id, c.first_name, c.last_name
+HAVING COUNT(o.transaction_id) > 2;
+
+6. SELECT 
+    CASE 
+        WHEN transaction_count BETWEEN 1 AND 2 THEN 'Regular Customer'
+        WHEN transaction_count > 2 THEN 'Loyal Customer'
+    END AS customer_type,
+    COUNT(DISTINCT customer_id) AS total_customers,
+    COUNT(transaction_id) AS total_transactions,
+    SUM(total_value) AS total_transaction_values
+FROM (
+    SELECT c.customer_id, o.Transaction_id, o.Total_value,
+           COUNT(o.Transaction_id) OVER (PARTITION BY c.customer_id) AS transaction_count
+    FROM Customer c
+    JOIN Order o ON c.customer_id = o.Customer_id
+    WHERE YEAR(o.Transaction_date) = 2016 AND MONTH(o.Transaction_date) = 7
+) AS customer_transactions
+GROUP BY customer_type; 
+
+
+
+2. PHP
+1. <?php
+function findLargestNumber($items) {
+    $largest = $items[0];
+    for ($i = 1; $i < count($items); $i++) {
+        if ($items[$i] > $largest) {
+            $largest = $items[$i];
+        }
+    }
+    return $largest;
+}
+
+echo findLargestNumber(array(11, 2, 5, -1, 20, 5, 6));
+?>
+
+2. <?php
+function countLetter($letter, $text) {
+    $count = 0;
+    for ($i = 0; $i < strlen($text); $i++) {
+        if ($text[$i] === $letter) {
+            $count++;
+        }
+    }
+    return $count;
+}
+
+echo countLetter('l', "Helloworld");
+?>
+
+3. <?php
+function calculateDiscount($cart_items, $promo_code) {
+    $total_discount = 0;
+    
+    if ($promo_code === "") {
+        return 0;
+    }
+    
+    for ($i = 0; $i < count($cart_items); $i++) {
+        $item = $cart_items[$i];
+        $item_name = $item[0];
+        $quantity = $item[1];
+        $price = $item[2];
+        
+        if ($price >= 100000) {
+            $item_discount = $price * 0.10 * $quantity;
+            $total_discount = $total_discount + $item_discount;
+        }
+    }
+    
+    if ($total_discount > 1000000) {
+        $total_discount = 1000000;
+    }
+    
+    return $total_discount;
+}
+
+$items = array(
+    array("Logitech Mouse", 2, 80000), 
+    array("Bluetooth Speaker", 1, 200000), 
+    array("Samsung Galaxy 7", 1, 9000000)
+);
+
+echo calculateDiscount($items, "TESTPROMO");
+echo "\n";
+echo calculateDiscount($items, "");
+?>
+
+4. <?php
+function printAllPossibilities($numOfToss) {
+    generate("", $numOfToss);
+}
+
+function generate($prefix, $remaining) {
+    if ($remaining == 0) {
+        echo $prefix . "\n";
+        return;
+    }
+
+    generate($prefix . "H", $remaining - 1);
+    generate($prefix . "T", $remaining - 1);
+}
+printAllPossibilities(2);
+printAllPossibilities(3);
+?>
