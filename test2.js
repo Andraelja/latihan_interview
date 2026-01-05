@@ -1,3 +1,5 @@
+// hitung banyak huruf
+
 function hitungHuruf(huruf, string) {
     let hitung = 0;
 

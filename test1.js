@@ -1,3 +1,5 @@
+// mencari angka terbesar
+
 function angkaTerbesar(array) {
     if(array.length === 0) return null;
 

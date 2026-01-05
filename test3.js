@@ -1,3 +1,5 @@
+// hitung diskon
+
 function hitungDiskon(cartItems, promoCode) {
 
     if (promoCode === "") {
