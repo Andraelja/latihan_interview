@@ -3,19 +3,22 @@
 function terbesarKedua(array) {
     if (array.length < 2) return null;
 
-    let terbesar = -Infinity;
-    let kedua = -Infinity;
+    let terbesar = array[0];
+    let kedua = null;
 
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 1; i < array.length; i++) {
         if (array[i] > terbesar) {
             kedua = terbesar;
             terbesar = array[i];
-        } else if (array[i] < terbesar && array[i] > kedua) {
+        } else if (
+            array[i] < terbesar &&
+            (kedua === null || array[i] > kedua)
+        ) {
             kedua = array[i];
         }
     }
 
-    return kedua === -Infinity ? null : kedua;
+    return kedua;
 }
 
 console.log(terbesarKedua([10, 5, 20, 8, 20]));
